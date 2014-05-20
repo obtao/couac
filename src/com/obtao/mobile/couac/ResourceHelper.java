@@ -6,70 +6,72 @@ import com.android.volley.Cache.Entry;
 import com.android.volley.Response.ErrorListener;
 import com.android.volley.Response.Listener;
 import com.obtao.mobile.couac.exception.ClientNotInitializedException;
-import com.obtao.mobile.couac.request.ModelArrayRequest;
-import com.obtao.mobile.couac.request.ModelObjectRequest;
+import com.obtao.mobile.couac.request.GetArrayRequest;
+import com.obtao.mobile.couac.request.GetObjectRequest;
+import com.obtao.mobile.couac.request.PostObjectRequest;
 
 public abstract class ResourceHelper<T extends Resource> {
 
 	private static final String LOG = "ResourceHelper";
+	private RestApiClient client;
 
-	public void processArrayRequest(int method, String url, Listener<T[]> listener, ErrorListener errorListener, Class<T[]> clazz) {
+	protected ResourceHelper() {
 		try {
-			Entry entry = RestApiClient.getInstance().getQueue().getCache().get(url);
-			if(entry != null) {
-				Log.i(LOG, "Notifications : get data in cache");
-				String cachedResponse = new String(entry.data);
-				//TODO gerer le cache...
-			} else {
-				
-				ModelArrayRequest<T> request = new ModelArrayRequest<T>(
-						method, 
-						url, 
-						listener, 
-						errorListener,
-						clazz);
-				request.setTag(this.getTag());
-				RestApiClient.getInstance().getQueue().add(request);
-			}
-		} catch(ClientNotInitializedException e) {
-			Log.e(LOG, "You must initialize the RestApiClient");
-			e.printStackTrace();
-		}
-	}
-	
-	protected void processObjectRequest(int method, String url, Listener<T> listener, ErrorListener errorListener, Class<T> clazz) {
-		try {
-			Entry entry = RestApiClient.getInstance().getQueue().getCache().get(url);
-			if(entry != null) {
-				Log.i(LOG, "Notifications : get data in cache");
-				String cachedResponse = new String(entry.data);
-				//TODO gerer le cache...
-			} else {
-				
-				ModelObjectRequest<T> request = new ModelObjectRequest<T>(
-						method, 
-						url, 
-						listener, 
-						errorListener,
-						clazz);
-				request.setTag(this.getTag());
-				RestApiClient.getInstance().getQueue().add(request);
-			}
-		} catch(ClientNotInitializedException e) {
-			Log.e(LOG, "You must initialize the RestApiClient");
-			e.printStackTrace();
-		}
-	}
-	
-	public void cancelRequests() {
-		try {
-			RestApiClient.getInstance().getQueue().cancelAll(this.getTag());
+			this.client = RestApiClient.getInstance();
 		} catch (ClientNotInitializedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 	
+	public void doGetArrayRequest(String url, Listener<T[]> listener, ErrorListener errorListener, Class<T[]> clazz) {
+		Entry entry = client.getQueue().getCache().get(url);
+		if(entry != null) {
+			Log.i(LOG, "Notifications : get data in cache");
+			String cachedResponse = new String(entry.data);
+			//TODO gerer le cache...
+		} else {
+
+			GetArrayRequest<T> request = new GetArrayRequest<T>(
+					url, 
+					listener, 
+					errorListener,
+					clazz);
+			request.setTag(this.getTag());
+			client.getQueue().add(request);
+		}
+
+	}
+
+	protected void doGetObjectRequest(String url, Listener<T> listener, ErrorListener errorListener, Class<T> clazz) {
+		Entry entry = client.getQueue().getCache().get(url);
+		if(entry != null) {
+			Log.i(LOG, "Notifications : get data in cache");
+			String cachedResponse = new String(entry.data);
+			//TODO gerer le cache...
+		} else {
+			GetObjectRequest<T> request = new GetObjectRequest<T>(
+					url, 
+					listener, 
+					errorListener,
+					clazz);
+			request.setTag(this.getTag());
+			client.getQueue().add(request);
+		}
+
+	}
+
+	protected void doPostObjectRequest(String url,T resource, Listener<GenericResponse> listener, ErrorListener errorListener) {
+		PostObjectRequest<T> request = new PostObjectRequest<T>(resource, url, listener, errorListener);
+		request.setTag(this.getTag());
+		client.getQueue().add(request);
+	}
+
+	public void cancelRequests() {
+		client.getQueue().cancelAll(this.getTag());
+
+	}
+
 	/**
 	 * <p>This tag is used by volley to tag requests this helper
 	 * will add in queue.</p>

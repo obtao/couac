@@ -8,15 +8,15 @@ import com.android.volley.Response.Listener;
 import com.google.gson.Gson;
 import com.obtao.mobile.couac.Resource;
 
-public class ModelObjectRequest<T extends Resource> extends Request<T> {
+public class GetObjectRequest<T extends Resource> extends Request<T> {
 
 	private Listener<T> listener;
 	private Gson gson;
 	private Class<T> clazz;
 
-	public ModelObjectRequest(int method, String url, 
+	public GetObjectRequest(String url, 
 			Listener<T> listener, ErrorListener errorListener, Class<T> clazz) {
-		super(method, url, errorListener);
+		super(Method.GET, url, errorListener);
 		this.listener = listener;
 		this.gson = new Gson();
 		this.clazz = clazz;
