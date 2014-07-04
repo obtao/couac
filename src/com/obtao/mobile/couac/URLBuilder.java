@@ -56,20 +56,30 @@ public class URLBuilder {
 	}
 	
 	/**
-	 * Just return the string url
+	 * Build the string url
 	 * @return final url as string
 	 */
 	public String build() {
 		url = new StringBuffer();
+		url.append(fullpath);
+		url.append(parameters);
+		clear();
+		return new String(url);
+	}
+	
+	/**
+	 * Build the string url prefixed with api base url defined in RestApiClient constructor
+	 * @return final url as string
+	 */
+	public String buildApiUrl() {
+		url = new StringBuffer();
 		try {
 			url.append(RestApiClient.getInstance().getBaseUrl());
-			url.append(fullpath);
-			url.append(parameters);
 		} catch (ClientNotInitializedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		clear();
+		url.append(build());
 		return new String(url);
 	}
 	
@@ -77,5 +87,5 @@ public class URLBuilder {
 		parameters = new StringBuffer();
 		fullpath = new StringBuffer();
 		firstParam = true;
-	}
+	}	
 }
