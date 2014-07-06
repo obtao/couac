@@ -67,22 +67,6 @@ public class URLBuilder {
 		return new String(url);
 	}
 	
-	/**
-	 * Build the string url prefixed with api base url defined in RestApiClient constructor
-	 * @return final url as string
-	 */
-	public String buildApiUrl() {
-		url = new StringBuffer();
-		try {
-			url.append(RestApiClient.getInstance().getBaseUrl());
-		} catch (ClientNotInitializedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		url.append(build());
-		return new String(url);
-	}
-	
 	private void clear() {
 		parameters = new StringBuffer();
 		fullpath = new StringBuffer();

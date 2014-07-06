@@ -24,7 +24,7 @@ public abstract class ResourceHelper<T extends Resource> {
 		}
 	}
 	
-	public void doGetArrayRequest(String url, Listener<T[]> listener, ErrorListener errorListener, Class<T[]> clazz) {
+	protected void doGetArrayRequest(String url, Listener<T[]> listener, ErrorListener errorListener, Class<T[]> clazz) {
 		Entry entry = client.getQueue().getCache().get(url);
 		if(entry != null) {
 			Log.i(LOG, "Notifications : get data in cache");
