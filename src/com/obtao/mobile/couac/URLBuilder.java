@@ -14,13 +14,7 @@ public class URLBuilder {
 	private StringBuffer parameters;
 	private StringBuffer url;
 	private boolean firstParam = true;
-	
-	/**
-	 * Initialize builder with base path defined in {@link RestApiClient} constructor
-	 * @see RestApiClient
-	 * @param path
-	 * @return {@link URLBuilder}
-	 */
+
 	public URLBuilder() {
 		parameters = new StringBuffer();
 		fullpath = new StringBuffer();

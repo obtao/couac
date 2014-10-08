@@ -13,7 +13,6 @@ public class RestApiClient {
 	private static final String LOG = "RestApiClient";
 
 	private static RestApiClient instance = null;
-	private String baseUrl;
 	private RequestQueue queue;
 
 	
@@ -21,8 +20,7 @@ public class RestApiClient {
 		return queue;
 	}
 
-	private RestApiClient(Context context, String baseUrl) {
-		this.baseUrl = baseUrl;
+	private RestApiClient(Context context) {
 		Log.d(LOG, "Initializing new Volley queue...");
 		queue = Volley.newRequestQueue(context);
 		queue.start();
@@ -35,13 +33,9 @@ public class RestApiClient {
 		return instance;
 	}
 	
-	public static void init(Context context, String baseUrl) {
+	public static void init(Context context) {
 		if(instance == null) {
-			instance = new RestApiClient(context, baseUrl);
+			instance = new RestApiClient(context);
 		}
-	}
-	
-	public String getBaseUrl() {
-		return baseUrl;
 	}
 }
